@@ -1,0 +1,40 @@
+{
+    "name": "sequelize-common",
+    "version": "0.0.1",
+    "description": "A common set of models and functions that we use throughout most of our Sequelize projects",
+    "keywords": [
+        "Typescript"
+    ],
+    "author": "TeamHive",
+    "contributors": [
+        "John Pinkster <jpinkster>"
+    ],
+    "homepage": "https://github.com/TeamHive/sequelize-common",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/TeamHive/sequelize-common.git"
+    },
+    "bugs": {
+        "url": "https://github.com/TeamHive/sequelize-common/issues"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "tsc -w",
+        "start": "tsc",
+        "postpublish": "git push && git push --tags",
+        "prepack": "tsc",
+        "postpack": "rm *.d.ts && rm *.js rm -Rf modules"
+    },
+    "peerDependencies": {
+        "@types/sequelize": "4.27.24",
+        "sequelize": "^4.41.2",
+        "sequelize-typescript": "^0.6.6"
+    },
+    "devDependencies": {
+        "@types/sequelize": "4.27.24",
+        "sequelize": "^4.41.2",
+        "sequelize-typescript": "^0.6.6",
+        "tslint": "^5.11.0",
+        "typescript": "^3.1.6"
+    }
+}

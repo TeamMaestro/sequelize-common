@@ -1,5 +1,5 @@
 {
-    "name": "sequelize-common",
+    "name": "@teamhive/sequelize-common",
     "version": "0.0.1",
     "description": "A common set of models and functions that we use throughout most of our Sequelize projects",
     "keywords": [
@@ -23,7 +23,7 @@
         "start": "tsc",
         "postpublish": "git push && git push --tags",
         "prepack": "tsc",
-        "postpack": "rm *.d.ts && rm *.js rm -Rf modules"
+        "postpack": "rm *.d.ts && rm *.js && rm -Rf modules"
     },
     "peerDependencies": {
         "@types/sequelize": "4.27.24",

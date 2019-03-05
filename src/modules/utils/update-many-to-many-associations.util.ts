@@ -11,7 +11,8 @@ export async function updateManyToManyAssociations(
         newChildren,
         updatingUserId,
         transaction,
-        hasSortOrder
+        hasSortOrder,
+        additionalJoinTableCreateFields
     }: UpdateManyToManyAssociationsOptions
 ) {
 
@@ -42,7 +43,8 @@ export async function updateManyToManyAssociations(
                         // if sortOrder field doesn't exist, sequelize will not attempt to insert this value, so no error
                         sortOrder: i,
                         createdById: updatingUserId,
-                        updatedById: updatingUserId
+                        updatedById: updatingUserId,
+                        ...additionalJoinTableCreateFields
                     },
                     { transaction }
                 )

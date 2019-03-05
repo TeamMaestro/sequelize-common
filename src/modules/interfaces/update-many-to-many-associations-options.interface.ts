@@ -10,4 +10,5 @@ export interface UpdateManyToManyAssociationsOptions {
     updatingUserId: number;
     transaction?: Transaction;
     hasSortOrder?: boolean;
+    additionalJoinTableCreateFields?: any;
 }

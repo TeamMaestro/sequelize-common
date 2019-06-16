@@ -1,3 +1,3 @@
-import { fn } from 'sequelize';
+import { Fn } from 'sequelize/types/lib/utils';
 
-export type GlobalCodeId = number | fn;
+export type GlobalCodeId = number | Fn;

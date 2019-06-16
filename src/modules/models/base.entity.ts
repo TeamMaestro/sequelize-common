@@ -1,4 +1,5 @@
-import { Column, Default, Model, Sequelize, Table, Unique } from 'sequelize-typescript';
+import * as Sequelize from 'sequelize';
+import { Column, Default, Model, Table, Unique } from 'sequelize-typescript';
 import { SequelizeDate } from '../types/sequelize-date.type';
 
 @Table({

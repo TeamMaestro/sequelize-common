@@ -26,14 +26,18 @@
         "postpack": "rm *.d.ts && rm *.js && rm -Rf modules"
     },
     "peerDependencies": {
-        "@types/sequelize": "4.27.24",
-        "sequelize": "^4.41.2",
-        "sequelize-typescript": "^0.6.6"
+        "sequelize": "^5.8.9",
+        "sequelize-typescript": "^1.0.0-beta.3",
+        "@types/bluebird": "^3.5.27",
+        "@types/validator": "^10.11.1",
+        "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
-        "@types/sequelize": "4.27.24",
-        "sequelize": "^4.41.2",
-        "sequelize-typescript": "^0.6.6",
+        "@types/bluebird": "^3.5.27",
+        "@types/validator": "^10.11.1",
+        "reflect-metadata": "^0.1.13",
+        "sequelize": "^5.8.9",
+        "sequelize-typescript": "^1.0.0-beta.3",
         "tslint": "^5.11.0",
         "typescript": "^3.1.6"
     }

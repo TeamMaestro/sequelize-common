@@ -1,3 +1,3 @@
-import { fn } from 'sequelize';
+import { Fn } from 'sequelize/types/lib/utils';
 
-export type SequelizeDate = Date | fn;
+export type SequelizeDate = Date | Fn;

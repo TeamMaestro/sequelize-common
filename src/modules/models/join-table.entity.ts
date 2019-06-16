@@ -1,4 +1,5 @@
-import { Column, Sequelize, Table } from 'sequelize-typescript';
+import * as Sequelize from 'sequelize';
+import { Column, Table } from 'sequelize-typescript';
 import { CreatedByEntity } from './created-by.entity';
 
 @Table({})

@@ -56,7 +56,7 @@ export async function updateManyToManyAssociations(
 
             // update sort order if necessary
             if (hasSortOrder) {
-                relationObjects[relationObjectIndex].sortOrder = i;
+                (relationObjects[relationObjectIndex] as JoinTableEntity).sortOrder = i;
                 relationObjects[relationObjectIndex].updatedById = updatingUserId;
                 promises.push(relationObjects[relationObjectIndex].save({ transaction }));
             }

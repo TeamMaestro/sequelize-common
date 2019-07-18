@@ -1,6 +1,6 @@
 {
     "name": "@teamhive/sequelize-common",
-    "version": "3.3.0",
+    "version": "3.3.1",
     "description": "A common set of models and functions that we use throughout most of our Sequelize projects",
     "keywords": [
         "Typescript"

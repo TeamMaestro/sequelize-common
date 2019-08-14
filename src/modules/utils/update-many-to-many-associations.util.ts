@@ -1,4 +1,3 @@
-import { fn } from 'sequelize';
 import { UpdateManyToManyAssociationsOptions } from '../interfaces/update-many-to-many-associations-options.interface';
 import { JoinTableEntity } from '../models/join-table.entity';
 
@@ -67,8 +66,7 @@ export async function updateManyToManyAssociations(
     const deletedRelationObjects: JoinTableEntity[] = [];
     for (const index of relationIndexesToDelete) {
         relationObjects[index].deletedById = updatingUserId;
-        relationObjects[index].deletedAt = fn('NOW');
-        promises.push(relationObjects[index].save({ transaction }));
+        promises.push(relationObjects[index].destroy({ transaction }));
         deletedRelationObjects.push(relationObjects[index]);
     }
 

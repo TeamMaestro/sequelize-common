@@ -1,4 +1,3 @@
-import { fn } from 'sequelize';
 import { UpdateOneToManyAssociationsOptions } from '../interfaces/update-one-to-many-associations-optioins.interface';
 
 export async function updateOneToManyAssociations(
@@ -40,8 +39,7 @@ export async function updateOneToManyAssociations(
     const deletedChildren = [];
     for (const index of currentChildrenIndexesToDelete) {
         currentChildren[index].deletedById = updatingUserId;
-        currentChildren[index].deletedAt = fn('NOW');
-        promises.push(currentChildren[index].save({ transaction }));
+        promises.push(currentChildren[index].destroy({ transaction }));
         deletedChildren.push(currentChildren[index]);
     }
 

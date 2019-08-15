@@ -1,7 +1,7 @@
 import { UpdateManyToManyAssociationsOptions } from '../interfaces/update-many-to-many-associations-options.interface';
 import { JoinTableEntity } from '../models/join-table.entity';
 
-export async function updateManyToManyAssociations(
+export async function updateManyToManyAssociations<T>(
     {
         parentInstanceId,
         joinTableModel,
@@ -12,7 +12,7 @@ export async function updateManyToManyAssociations(
         transaction,
         hasSortOrder,
         additionalJoinTableCreateFields
-    }: UpdateManyToManyAssociationsOptions
+    }: UpdateManyToManyAssociationsOptions<T>
 ) {
 
     // get the current join table objects
@@ -20,7 +20,7 @@ export async function updateManyToManyAssociations(
         where: { [parentForeignKey]: parentInstanceId }
     });
     // map the objects to be an array of the child ids
-    const relationIds = relationObjects.map(object => object[childForeignKey]);
+    const relationIds = relationObjects.map(object => object[childForeignKey as string]);
     // set of all the current relationObjects, will remove indexes that are in the newChildren,
     // then delete remaining and return at end
     const relationIndexesToDelete = new Set([...Array(relationObjects.length).keys()]);
@@ -37,8 +37,8 @@ export async function updateManyToManyAssociations(
             promises.push(
                 joinTableModel.create(
                     {
-                        [parentForeignKey]: parentInstanceId,
-                        [childForeignKey]: newChildren[i].id,
+                        [parentForeignKey as string]: parentInstanceId,
+                        [childForeignKey as string]: newChildren[i].id,
                         // if sortOrder field doesn't exist, sequelize will not attempt to insert this value, so no error
                         sortOrder: i,
                         createdById: updatingUserId,

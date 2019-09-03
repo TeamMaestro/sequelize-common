@@ -1,11 +1,12 @@
 import { Transaction } from 'sequelize';
+import { ModelCtor } from 'sequelize-typescript';
 import { CreatedByEntity } from '../models/created-by.entity';
 import { JoinTableEntity } from '../models/join-table.entity';
 import { AttributesOf } from '../types';
 
-export interface UpdateManyToManyAssociationsOptions<T> {
+export interface UpdateManyToManyAssociationsOptions<T extends JoinTableEntity | CreatedByEntity<T>> {
     parentInstanceId: number;
-    joinTableModel: typeof JoinTableEntity | typeof CreatedByEntity;
+    joinTableModel: ModelCtor<T>;
     parentForeignKey: keyof AttributesOf<T>;
     childForeignKey: keyof AttributesOf<T>;
     newChildren: any[];

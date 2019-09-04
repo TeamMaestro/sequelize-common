@@ -1,7 +1,8 @@
 import { UpdateManyToManyAssociationsOptions } from '../interfaces/update-many-to-many-associations-options.interface';
+import { CreatedByEntity } from '../models/created-by.entity';
 import { JoinTableEntity } from '../models/join-table.entity';
 
-export async function updateManyToManyAssociations<T>(
+export async function updateManyToManyAssociations<T extends JoinTableEntity | CreatedByEntity<T>>(
     {
         parentInstanceId,
         joinTableModel,
@@ -55,8 +56,9 @@ export async function updateManyToManyAssociations<T>(
 
             // update sort order if necessary
             if (hasSortOrder) {
-                (relationObjects[relationObjectIndex] as JoinTableEntity).sortOrder = i;
-                relationObjects[relationObjectIndex].updatedById = updatingUserId;
+                const instance = relationObjects[relationObjectIndex];
+                (instance as JoinTableEntity).sortOrder = i;
+                (instance as CreatedByEntity<T>).updatedById = updatingUserId;
                 promises.push(relationObjects[relationObjectIndex].save({ transaction }));
             }
         }
@@ -65,9 +67,10 @@ export async function updateManyToManyAssociations<T>(
     // for all indexes of the current relations that were not in the new set, delete them
     const deletedRelationObjects: JoinTableEntity[] = [];
     for (const index of relationIndexesToDelete) {
-        relationObjects[index].deletedById = updatingUserId;
+        const instance = relationObjects[index] as CreatedByEntity<T>;
+        instance.deletedById = updatingUserId;
         promises.push(relationObjects[index].destroy({ transaction }));
-        deletedRelationObjects.push(relationObjects[index]);
+        deletedRelationObjects.push(instance);
     }
 
     // resolve all promises

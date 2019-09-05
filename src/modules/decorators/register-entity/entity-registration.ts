@@ -1,9 +1,9 @@
-import { Model } from 'sequelize-typescript';
+import { ModelCtor } from 'sequelize-typescript';
 
 export class EntityRegistration {
-    private static models: (typeof Model)[] = [];
+    private static models: ModelCtor<any>[] = [];
 
-    static registerEntity(model: typeof Model) {
+    static registerEntity(model: ModelCtor<any>) {
         EntityRegistration.models.push(model);
     }
 

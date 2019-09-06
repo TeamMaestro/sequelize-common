@@ -12,6 +12,7 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
         updatingUserId,
         transaction,
         hasSortOrder,
+        instanceSpecificJoinTableCreateFields,
         additionalJoinTableCreateFields
     }: UpdateManyToManyAssociationsOptions<T>
 ) {
@@ -26,6 +27,12 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
     // then delete remaining and return at end
     const relationIndexesToDelete = new Set([...Array(relationObjects.length).keys()]);
 
+    // additional fields that will be added to the association table
+    if (!instanceSpecificJoinTableCreateFields) {
+            // set custom fields to empty array if not sent
+            instanceSpecificJoinTableCreateFields = [];
+    }
+
     // promise array for all creates and deletes that will need to happen
     const promises = [];
 
@@ -35,6 +42,17 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
 
         // if they don't exist in the current relations, create new relation
         if (relationObjectIndex === -1) {
+
+            // check for custom table fields
+            const customFieldMatch = instanceSpecificJoinTableCreateFields.find(instance => {
+                return instance.identity === newChildren[i].identity;
+            });
+
+            let customTableFields = [];
+            if (customFieldMatch && customFieldMatch.fields) {
+                customTableFields = customFieldMatch.fields;
+            }
+
             promises.push(
                 joinTableModel.create(
                     {
@@ -44,7 +62,8 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
                         sortOrder: i,
                         createdById: updatingUserId,
                         updatedById: updatingUserId,
-                        ...additionalJoinTableCreateFields
+                        ...additionalJoinTableCreateFields,
+                        ...customTableFields
                     },
                     { transaction }
                 )

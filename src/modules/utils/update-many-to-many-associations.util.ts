@@ -12,7 +12,7 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
         updatingUserId,
         transaction,
         hasSortOrder,
-        instanceSpecificJoinTableCreateFields,
+        instanceSpecificJoinTableFields,
         additionalJoinTableCreateFields
     }: UpdateManyToManyAssociationsOptions<T>
 ) {
@@ -28,9 +28,9 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
     const relationIndexesToDelete = new Set([...Array(relationObjects.length).keys()]);
 
     // additional fields that will be added to the association table
-    if (!instanceSpecificJoinTableCreateFields) {
+    if (!instanceSpecificJoinTableFields) {
             // set custom fields to empty array if not sent
-            instanceSpecificJoinTableCreateFields = [];
+            instanceSpecificJoinTableFields = [];
     }
 
     // promise array for all creates and deletes that will need to happen
@@ -44,7 +44,7 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
         if (relationObjectIndex === -1) {
 
             // check for custom table fields
-            const customFieldMatch = instanceSpecificJoinTableCreateFields.find(instance => {
+            const customFieldMatch = instanceSpecificJoinTableFields.find(instance => {
                 return instance.identity === newChildren[i].identity;
             });
 

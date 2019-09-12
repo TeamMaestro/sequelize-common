@@ -1,6 +1,6 @@
 import { Transaction } from 'sequelize';
-import { InstanceSpecificJoinTableField } from './instanceSpecificJoinTableCreateField.interface';
 import { ModelCtor } from 'sequelize-typescript';
+import { InstanceSpecificJoinTableField } from './instanceSpecificJoinTableField.interface';
 import { CreatedByEntity } from '../models/created-by.entity';
 import { JoinTableEntity } from '../models/join-table.entity';
 import { AttributesOf } from '../types';
@@ -14,6 +14,6 @@ export interface UpdateManyToManyAssociationsOptions<T extends JoinTableEntity |
     updatingUserId: number;
     transaction?: Transaction;
     hasSortOrder?: boolean;
-    instanceSpecificJoinTableCreateFields?: InstanceSpecificJoinTableField[];
+    instanceSpecificJoinTableFields?: InstanceSpecificJoinTableField[];
     additionalJoinTableCreateFields?: any;
 }

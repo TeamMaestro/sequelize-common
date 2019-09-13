@@ -1,6 +1,6 @@
 import { Transaction } from 'sequelize';
 import { ModelCtor } from 'sequelize-typescript';
-import { InstanceSpecificJoinTableField } from './instanceSpecificJoinTableField.interface';
+import { InstanceSpecificJoinTableField } from './instance-specific-join-table-field.interface';
 import { CreatedByEntity } from '../models/created-by.entity';
 import { JoinTableEntity } from '../models/join-table.entity';
 import { AttributesOf } from '../types';

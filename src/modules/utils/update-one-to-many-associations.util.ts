@@ -6,11 +6,12 @@ export async function updateOneToManyAssociations(
         newChildren,
         hasSortOrder,
         updatingUserId,
+        childPrimaryKey = 'id',
         transaction
     }: UpdateOneToManyAssociationsOptions
 ) {
     // map current objects to an array of ids
-    const currentChildrenIds = currentChildren.map(currentChild => currentChild.id);
+    const currentChildrenIds = currentChildren.map(currentChild => currentChild[childPrimaryKey]);
     // set of all the current indexes of currentChildren, will remove indexes that are in the newChildren,
     // then delete any that remain in the set
     const currentChildrenIndexesToDelete = new Set([...Array(currentChildren.length).keys()]);
@@ -27,7 +28,7 @@ export async function updateOneToManyAssociations(
             promises.push(newChildren[i].save({ transaction }));
         }
 
-        const currentChildIndex = currentChildrenIds.indexOf(newChildren[i].id);
+        const currentChildIndex = currentChildrenIds.indexOf(newChildren[i][childPrimaryKey]);
 
         // if new child exists in the current children, set that index to not be deleted
         if (currentChildIndex !== -1) {

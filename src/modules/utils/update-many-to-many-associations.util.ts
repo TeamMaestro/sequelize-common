@@ -11,12 +11,12 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
         newChildren,
         updatingUserId,
         transaction,
+        childPrimaryKey = 'id',
         hasSortOrder,
         instanceSpecificJoinTableFields,
         additionalJoinTableCreateFields
     }: UpdateManyToManyAssociationsOptions<T>
 ) {
-
     // get the current join table objects
     const relationObjects = await joinTableModel.findAll({
         where: { [parentForeignKey]: parentInstanceId }
@@ -38,7 +38,7 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
 
     // loop through the newChildren to create relation if necessary
     for (let i = 0; i < newChildren.length; i += 1) {
-        const relationObjectIndex = relationIds.indexOf(newChildren[i].id);
+        const relationObjectIndex = relationIds.indexOf(newChildren[i][childPrimaryKey]);
 
         // if they don't exist in the current relations, create new relation
         if (relationObjectIndex === -1) {
@@ -57,7 +57,7 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
                 joinTableModel.create(
                     {
                         [parentForeignKey as string]: parentInstanceId,
-                        [childForeignKey as string]: newChildren[i].id,
+                        [childForeignKey as string]: newChildren[i][childPrimaryKey],
                         // if sortOrder field doesn't exist, sequelize will not attempt to insert this value, so no error
                         sortOrder: i,
                         createdById: updatingUserId,

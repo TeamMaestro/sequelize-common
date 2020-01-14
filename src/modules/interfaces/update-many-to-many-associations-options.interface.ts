@@ -12,6 +12,7 @@ export interface UpdateManyToManyAssociationsOptions<T extends JoinTableEntity |
     childForeignKey: keyof AttributesOf<T>;
     newChildren: any[];
     updatingUserId: number;
+    childPrimaryKey?: string;
     transaction?: Transaction;
     hasSortOrder?: boolean;
     instanceSpecificJoinTableFields?: InstanceSpecificJoinTableField[];

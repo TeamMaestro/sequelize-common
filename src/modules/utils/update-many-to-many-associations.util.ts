@@ -17,22 +17,19 @@ export async function updateManyToManyAssociations<
     instanceSpecificJoinTableFields,
     additionalJoinTableCreateFields,
     childComparisonKeys,
-    childCreateOrUpdateFields
+    childCreateOrUpdateFields,
+    joinTableFindAttributes
 }: UpdateManyToManyAssociationsOptions<T>) {
     if (!childComparisonKeys) {
         childComparisonKeys = [childPrimaryKey];
     }
     // get the current join table objects
     const relationObjects = await joinTableModel.findAll({
-        attributes: Array.isArray(childPrimaryKey)
-            ? childPrimaryKey
+        attributes: childCreateOrUpdateFields
+            ? joinTableFindAttributes
             : undefined,
         where: { [parentForeignKey]: parentInstanceId }
     });
-    // // map the objects to be an array of the child ids
-    // const relationIds = relationObjects.map(
-    //     object => object[childForeignKey as string]
-    // );
     // set of all the current relationObjects, will remove indexes that are in the newChildren,
     // then delete remaining and return at end
     const relationIndexesToDelete = new Set([

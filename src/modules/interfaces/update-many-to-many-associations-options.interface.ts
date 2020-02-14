@@ -48,6 +48,12 @@ export interface UpdateManyToManyAssociationsOptions<
      */
     childComparisonKeys?: string[];
     /**
+     * Attributes to request from the database.  These are used when determining
+     * if the child exists and to what parent it is related.  Should be given
+     * if default scope does not include enough information.
+     */
+    joinTableFindAttributes?: string[];
+    /**
      * The transaction to run the update in
      */
     transaction?: Transaction;

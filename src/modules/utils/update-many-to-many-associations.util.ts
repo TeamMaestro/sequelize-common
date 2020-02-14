@@ -2,35 +2,47 @@ import { UpdateManyToManyAssociationsOptions } from '../interfaces/update-many-t
 import { CreatedByEntity } from '../models/created-by.entity';
 import { JoinTableEntity } from '../models/join-table.entity';
 
-export async function updateManyToManyAssociations<T extends JoinTableEntity | CreatedByEntity<T>>(
-    {
-        parentInstanceId,
-        joinTableModel,
-        parentForeignKey,
-        childForeignKey,
-        newChildren,
-        updatingUserId,
-        transaction,
-        childPrimaryKey = 'id',
-        hasSortOrder,
-        instanceSpecificJoinTableFields,
-        additionalJoinTableCreateFields
-    }: UpdateManyToManyAssociationsOptions<T>
-) {
+export async function updateManyToManyAssociations<
+    T extends JoinTableEntity | CreatedByEntity<T>
+>({
+    parentInstanceId,
+    joinTableModel,
+    parentForeignKey,
+    childForeignKey,
+    newChildren,
+    updatingUserId,
+    transaction,
+    childPrimaryKey = "id",
+    hasSortOrder,
+    instanceSpecificJoinTableFields,
+    additionalJoinTableCreateFields,
+    childComparisonKeys,
+    childCreateOrUpdateFields
+}: UpdateManyToManyAssociationsOptions<T>) {
+    if (!childComparisonKeys) {
+        childComparisonKeys = [childPrimaryKey];
+    }
     // get the current join table objects
     const relationObjects = await joinTableModel.findAll({
+        attributes: Array.isArray(childPrimaryKey)
+            ? childPrimaryKey
+            : undefined,
         where: { [parentForeignKey]: parentInstanceId }
     });
-    // map the objects to be an array of the child ids
-    const relationIds = relationObjects.map(object => object[childForeignKey as string]);
+    // // map the objects to be an array of the child ids
+    // const relationIds = relationObjects.map(
+    //     object => object[childForeignKey as string]
+    // );
     // set of all the current relationObjects, will remove indexes that are in the newChildren,
     // then delete remaining and return at end
-    const relationIndexesToDelete = new Set([...Array(relationObjects.length).keys()]);
+    const relationIndexesToDelete = new Set([
+        ...Array(relationObjects.length).keys()
+    ]);
 
     // additional fields that will be added to the association table
     if (!instanceSpecificJoinTableFields) {
-            // set custom fields to empty array if not sent
-            instanceSpecificJoinTableFields = [];
+        // set custom fields to empty array if not sent
+        instanceSpecificJoinTableFields = [];
     }
 
     // promise array for all creates and deletes that will need to happen
@@ -38,36 +50,55 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
 
     // loop through the newChildren to create relation if necessary
     for (let i = 0; i < newChildren.length; i += 1) {
-        const relationObjectIndex = relationIds.indexOf(newChildren[i][childPrimaryKey]);
+        let relationObjectIndex: number = -1;
+        relationObjects.find((object, index) => {
+            let matches = true;
+            childComparisonKeys.forEach(key => {
+                if (object[key] !== newChildren[key]) {
+                    matches = false;
+                }
+            });
+            if (matches) {
+                relationObjectIndex = index;
+            }
+            return matches;
+        });
 
         // if they don't exist in the current relations, create new relation
         if (relationObjectIndex === -1) {
-
             // check for custom table fields
-            const customFieldMatch = instanceSpecificJoinTableFields.find(instance => {
-                return instance.identity === newChildren[i].identity;
-            });
+            const customFieldMatch = instanceSpecificJoinTableFields.find(
+                instance => {
+                    return instance.identity === newChildren[i].identity;
+                }
+            );
 
             let customTableFields = [];
             if (customFieldMatch && customFieldMatch.fields) {
                 customTableFields = customFieldMatch.fields;
             }
 
-            promises.push(
-                joinTableModel.create(
-                    {
-                        [parentForeignKey as string]: parentInstanceId,
-                        [childForeignKey as string]: newChildren[i][childPrimaryKey],
-                        // if sortOrder field doesn't exist, sequelize will not attempt to insert this value, so no error
-                        sortOrder: i,
-                        createdById: updatingUserId,
-                        updatedById: updatingUserId,
-                        ...additionalJoinTableCreateFields,
-                        ...customTableFields
-                    },
-                    { transaction }
-                )
-            );
+            const createOrUpdateFields = {};
+
+            if (childCreateOrUpdateFields) {
+                childCreateOrUpdateFields.forEach(field => {
+                    createOrUpdateFields[field] = newChildren[i][field];
+                });
+            }
+
+            const newObject = {
+                ...createOrUpdateFields,
+                [childForeignKey as string]: newChildren[i][childPrimaryKey],
+                [parentForeignKey as string]: parentInstanceId,
+                // if sortOrder field doesn't exist, sequelize will not attempt to insert this value, so no error
+                sortOrder: i,
+                createdById: updatingUserId,
+                updatedById: updatingUserId,
+                ...additionalJoinTableCreateFields,
+                ...customTableFields
+            };
+
+            promises.push(joinTableModel.create(newObject, { transaction }));
         }
         // if the newChild existed, then remove that index from the list to be deleted
         else {
@@ -78,7 +109,14 @@ export async function updateManyToManyAssociations<T extends JoinTableEntity | C
                 const instance = relationObjects[relationObjectIndex];
                 (instance as JoinTableEntity).sortOrder = i;
                 (instance as CreatedByEntity<T>).updatedById = updatingUserId;
-                promises.push(relationObjects[relationObjectIndex].save({ transaction }));
+                if (childCreateOrUpdateFields) {
+                    childCreateOrUpdateFields.forEach(field => {
+                        instance[field] = newChildren[i][field];
+                    });
+                }
+                promises.push(
+                    relationObjects[relationObjectIndex].save({ transaction })
+                );
             }
         }
     }

@@ -12,7 +12,7 @@ export async function updateManyToManyAssociations<
     newChildren,
     updatingUserId,
     transaction,
-    childPrimaryKey = "id",
+    childPrimaryKey = 'id',
     hasSortOrder,
     instanceSpecificJoinTableFields,
     additionalJoinTableCreateFields,

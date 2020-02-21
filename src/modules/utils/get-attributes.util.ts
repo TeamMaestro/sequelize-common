@@ -4,6 +4,7 @@ import { Diff } from '../types';
 
 // include 'version' here?
 type IncludedModelAttributes = 'id' | 'createdAt' | 'updatedAt' | 'deletedAt';
+export type AttributesArray<T extends Model<T>> = Diff<keyof T, Diff<keyof EmptyModel, IncludedModelAttributes>>[];
 
 /**
  * Typecheck that makes sure input array is a custom attribute
@@ -12,7 +13,7 @@ type IncludedModelAttributes = 'id' | 'createdAt' | 'updatedAt' | 'deletedAt';
  * but including the IncludeModelAttributes.
  */
 export function getAttributes<T extends Model<T>>(
-    attributes: Diff<keyof T, Diff<keyof EmptyModel, IncludedModelAttributes>>[]
+    attributes: AttributesArray<T>
 ) {
     return attributes;
 }

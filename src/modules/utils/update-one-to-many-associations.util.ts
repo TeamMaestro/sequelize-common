@@ -8,27 +8,21 @@ export async function updateOneToManyAssociations<
     T extends CreatedByEntity<T>,
     AuthenticatedUserType extends AuthenticatedUser = AuthenticatedUser,
     NewChildrenType = any
->(
-    {
+>(options: UpdateOneToManyAssociationsOptions<T, AuthenticatedUserType, NewChildrenType>
+) {
+    const {
         currentChildren,
         newChildren,
         comparisonFunction,
         fillFunction,
         user,
         transaction,
-        childTableModel
-    }: UpdateOneToManyAssociationsOptions<T, AuthenticatedUserType, NewChildrenType>
-) {
-    /*
-     * Creates an set of all of the indexes that might be deleted.
-     * For example, if 4 related objects were found the set is
-     * [0, 1, 2, 3, 4].
-     * As related objects are matched up with their children, the
-     * index will be removed from the set to delete.
-     */
-    const relationIndexesToDelete = new Set([
-        ...Array(currentChildren.length).keys()
-    ]);
+        childTableModel,
+    } = options;
+
+    const relationIdsToDelete = new Set(
+        currentChildren.map(currentChild => currentChild.id)
+    );
 
     // promise array for all creates and deletes that will need to happen
     const updatePromises: Promise<T>[] = [];
@@ -41,7 +35,7 @@ export async function updateOneToManyAssociations<
 
         // if they don't exist in the current relations, create new relation
         if (relationObjectIndex < 0) {
-            const filledRecord = fillFunction(user, newChildren[i], i);
+            const filledRecord = fillFunction(newChildren[i], i, undefined, options);
             filledRecord.createdById = user.id;
             filledRecord.updatedById = user.id;
             recordsToCreate.push(filledRecord);
@@ -50,9 +44,9 @@ export async function updateOneToManyAssociations<
         else {
             const relatedObject = currentChildren[relationObjectIndex];
             currentChildren.splice(relationObjectIndex, 1);
-            relationIndexesToDelete.delete(relationObjectIndex);
+            relationIdsToDelete.delete(currentChildren[i].id);
 
-            const filledRecord = fillFunction(user, newChildren[i], i, relatedObject);
+            const filledRecord = fillFunction(newChildren[i], i, relatedObject, options);
             filledRecord.updatedById = user.id;
             // update sort order if necessary
             updatePromises.push(
@@ -66,12 +60,7 @@ export async function updateOneToManyAssociations<
     }) as unknown as Promise<T[]>;
 
     // create an array of all the records to delete
-    const deletedRelationObjects: T[] = [];
-    const idsToDelete: number[] = [];
-    relationIndexesToDelete.forEach(index => {
-        idsToDelete.push(currentChildren[index].id);
-        deletedRelationObjects.push(currentChildren[index]);
-    });
+    const idsToDelete: number[] = Array.from(relationIdsToDelete);
 
     // create a default promise that will return that 0 records were updated
     let deletePromise = new Promise<[number, T[]]>(resolve => resolve([0, []]));

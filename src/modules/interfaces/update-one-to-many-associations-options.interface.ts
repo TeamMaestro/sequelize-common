@@ -3,7 +3,7 @@ import { ModelCtor } from 'sequelize-typescript';
 import { AuthenticatedUser } from './authenticated-user.interface';
 import { CreatedByEntity } from '../models/created-by.entity';
 import { JoinTableEntity } from '../models/join-table.entity';
-import { AttributesOf } from '../types';
+import { UpdateAssociationFillFunction } from '../types/update-association-fill-function.type';
 
 export interface UpdateOneToManyAssociationsOptions<
     T extends JoinTableEntity | CreatedByEntity<T>,
@@ -41,7 +41,7 @@ export interface UpdateOneToManyAssociationsOptions<
      * @param index Index of newChild in the newChildren array (use this for sort order)
      * @param existingRecord If there was a match, the existing record will be included
      */
-    fillFunction: (user: AuthenticatedUserType, newChild: NewChildrenType, index: number, existingRecord?: T) => AttributesOf<T>;
+    fillFunction: UpdateAssociationFillFunction<T, AuthenticatedUserType, NewChildrenType>;
     /**
      * The transaction to run the update in
      */

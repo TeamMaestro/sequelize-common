@@ -44,7 +44,7 @@ export async function updateOneToManyAssociations<
         else {
             const relatedObject = currentChildren[relationObjectIndex];
             currentChildren.splice(relationObjectIndex, 1);
-            relationIdsToDelete.delete(currentChildren[i].id);
+            relationIdsToDelete.delete(relatedObject.id);
 
             const filledRecord = fillFunction(newChildren[i], i, relatedObject, options);
             filledRecord.updatedById = user.id;

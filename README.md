@@ -41,8 +41,13 @@ These functions take three generic types, `T`, the model of the associated table
 ```typescript
 (existingJoinTableRecords, associatedRecord) => 
     existingJoinTableRecords.findIndex(existingJoinTableRecord =>
-        existingJoinTableRecord.loopRecordId === associatedRecord.id),
+        existingJoinTableRecord.recordId === associatedRecord.id),
 ```
+
+#### For typical use cases default functions exist
+
+- `defaultUpdateAssocaitionComparisonfunction`: a key on the existing children to the new children's ids
+- `defaultUpdateManyToManyFillFunction`: fills the new record with the parent foreign key/id, the child foreign key/id, and the updating user/time.
 
 #### Options
 ```typescript
@@ -81,17 +86,34 @@ export interface UpdateOneToManyAssociationsOptions<
      * @param newChild The child to create/update
      * @param index Index of newChild in the newChildren array (use this for sort order)
      * @param existingRecord If there was a match, the existing record will be included
+     * @param updateOptions The other options passed into the top level function are passed again into this function
      */
-    fillFunction: (user: AuthenticatedUserType, newChild: NewChildrenType, index: number, existingRecord?: T) => AttributesOf<T>;
+    fillFunction: UpdateAssociationFillFunction<T, AuthenticatedUserType, NewChildrenType>;
     /**
      * The transaction to run the update in
      */
-    transaction?: Transaction;
+    transaction: Transaction;
 }
 ```
 
-#### Example
+#### Default Example
 
+```typescript
+return await updateManyToManyAssociations<ScenarioGroup, AuthenticatedUser, Group>({
+        joinTableModel: ScenarioGroup,
+        parentInstanceId: group.id,
+        parentForeignKey: 'loopGroupId',
+        joinTableFindAttributes: ['id', 'identity', 'loopScenarioId', 'loopGroupId'],
+        comparisonFunction: defaultUpdateAssociationComparisonFunction('loopScenarioId'),
+        fillFunction: defaultUpdateManyToManyFillFunction('loopScenarioId'),
+        newChildren: scenarios,
+        user,
+        transaction: undefined
+    });
+}
+```
+
+#### Verbose Custom Example
 ```typescript
 const records = await updateOneToManyAssociations<TaskQuestion, AuthenticatedUser, ContentTaskQuestionDto>({
     childTableModel: TaskQuestion,

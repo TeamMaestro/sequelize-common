@@ -40,6 +40,7 @@ export interface UpdateOneToManyAssociationsOptions<
      * @param newChild The child to create/update
      * @param index Index of newChild in the newChildren array (use this for sort order)
      * @param existingRecord If there was a match, the existing record will be included
+     * @param updateOptions The other options passed into the top level function are passed again into this function
      */
     fillFunction: UpdateAssociationFillFunction<T, AuthenticatedUserType, NewChildrenType>;
     /**

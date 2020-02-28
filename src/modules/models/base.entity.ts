@@ -1,4 +1,5 @@
 import * as Sequelize from 'sequelize';
+import { FindOptions } from 'sequelize';
 import { Column, Default, Model, Table, Unique } from 'sequelize-typescript';
 import { SequelizeDate } from '../types/sequelize-date.type';
 
@@ -37,4 +38,9 @@ export class BaseEntity<i> extends Model<BaseEntity<i>> {
         field: 'deleted_at'
     })
     deletedAt: SequelizeDate;
+
+    static async findOne(options?: FindOptions) {
+        const results = await this.findAll(options);
+        return results && results.length > 0 ? results[0] : undefined;
+    }
 }

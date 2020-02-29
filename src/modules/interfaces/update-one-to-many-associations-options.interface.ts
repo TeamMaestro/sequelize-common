@@ -51,6 +51,5 @@ export interface UpdateOneToManyAssociationsOptions<
      * Default: False
      * If true, this will prevent this function from deleting relationships that were not provided.
      */
-    upsertOnly: boolean;
-
+    upsertOnly?: boolean;
 }

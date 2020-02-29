@@ -39,7 +39,7 @@ These functions take three generic types, `T`, the model of the associated table
 ##### To create a comparison function that compares a column on the join table to an associated record, a function similar to the following expression should suffice.
 
 ```typescript
-(existingJoinTableRecords, associatedRecord) => 
+(existingJoinTableRecords, associatedRecord) =>
     existingJoinTableRecords.findIndex(existingJoinTableRecord =>
         existingJoinTableRecord.recordId === associatedRecord.id),
 ```
@@ -93,6 +93,11 @@ export interface UpdateOneToManyAssociationsOptions<
      * The transaction to run the update in
      */
     transaction: Transaction;
+    /**
+     * Default: False
+     * If true, this will prevent this function from deleting relationships that were not provided.
+     */
+    upsertOnly?: boolean;
 }
 ```
 
@@ -108,7 +113,8 @@ return await updateManyToManyAssociations<ScenarioGroup, AuthenticatedUser, Grou
         fillFunction: defaultUpdateManyToManyFillFunction('loopScenarioId'),
         newChildren: scenarios,
         user,
-        transaction: undefined
+        transaction: undefined,
+        upsertOnly: true
     });
 }
 ```

@@ -7,7 +7,7 @@ type IncludedModelAttributes = 'id' | 'createdAt' | 'updatedAt' | 'deletedAt';
 export type AttributesArray<T extends Model<T>> = Diff<keyof T, Diff<keyof EmptyModel, IncludedModelAttributes>>[];
 
 /**
- * Typecheck that makes sure input array is a custom attribute
+ * Type check that makes sure input array is a custom attribute
  * of T (an entity). The type is created by all keys of T
  * that do not exist in an empty sequelize model (Empty Model),
  * but including the IncludeModelAttributes.

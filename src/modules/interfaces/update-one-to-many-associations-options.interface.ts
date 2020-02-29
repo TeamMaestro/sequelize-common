@@ -47,4 +47,10 @@ export interface UpdateOneToManyAssociationsOptions<
      * The transaction to run the update in
      */
     transaction: Transaction;
+    /**
+     * Default: False
+     * If true, this will prevent this function from deleting relationships that were not provided.
+     */
+    upsertOnly: boolean;
+
 }

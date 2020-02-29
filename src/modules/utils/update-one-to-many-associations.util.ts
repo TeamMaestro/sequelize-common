@@ -20,6 +20,9 @@ export async function updateOneToManyAssociations<
         childTableModel,
     } = options;
 
+    // Used to determine if we will actually delete items at the end
+    const upsertOnly = !!options.upsertOnly;
+
     const relationIdsToDelete = new Set(
         currentChildren.map(currentChild => currentChild.id)
     );
@@ -65,7 +68,7 @@ export async function updateOneToManyAssociations<
     // create a default promise that will return that 0 records were updated
     let deletePromise = new Promise<[number, T[]]>(resolve => resolve([0, []]));
     // delete those records
-    if (idsToDelete.length > 0) {
+    if (idsToDelete.length > 0 && !upsertOnly) {
         deletePromise = childTableModel.update({
             deletedById: user.id,
             deletedAt: fn('now')

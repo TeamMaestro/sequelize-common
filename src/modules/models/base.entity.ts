@@ -41,7 +41,7 @@ export class BaseEntity<i> extends Model<BaseEntity<i>> {
 
     static findOne<M extends BaseEntity<any>>(options: FindOptions): Sequelize.Promise<M> {
         return new Sequelize.Promise((resolve, reject) => {
-            BaseEntity.findAll(options).then(results => {
+            this.findAll(options).then(results => {
                 resolve((results && results.length > 0 ? results[0] : undefined) as any);
             }).catch(error => {
                 reject(error);

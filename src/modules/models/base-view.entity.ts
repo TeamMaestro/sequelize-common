@@ -1,3 +1,4 @@
+import * as Sequelize from 'sequelize';
 import { Model, Table } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
 
@@ -8,8 +9,13 @@ import { FindOptions } from 'sequelize/types';
 })
 export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
 
-    static async findOne(options?: FindOptions) {
-        const results = await this.findAll(options);
-        return results && results.length > 0 ? results[0] : undefined;
+    static findOne<M extends BaseViewEntity<any>>(options: FindOptions): Sequelize.Promise<M> {
+        return new Sequelize.Promise((resolve, reject) => {
+            BaseViewEntity.findAll(options).then(results => {
+                resolve((results && results.length > 0 ? results[0] : undefined) as any);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }

@@ -39,8 +39,13 @@ export class BaseEntity<i> extends Model<BaseEntity<i>> {
     })
     deletedAt: SequelizeDate;
 
-    static async findOne(options?: FindOptions) {
-        const results = await this.findAll(options);
-        return results && results.length > 0 ? results[0] : undefined;
+    static findOne<M extends BaseEntity<any>>(options: FindOptions): Sequelize.Promise<M> {
+        return new Sequelize.Promise((resolve, reject) => {
+            BaseEntity.findAll(options).then(results => {
+                resolve((results && results.length > 0 ? results[0] : undefined) as any);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 }

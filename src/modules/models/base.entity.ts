@@ -1,6 +1,6 @@
 import * as Sequelize from 'sequelize';
-import { FindOptions } from 'sequelize';
-import { Column, Default, Model, Table, Unique } from 'sequelize-typescript';
+import { Column, Default, Table, Unique } from 'sequelize-typescript';
+import { BaseViewEntity } from './base-view.entity';
 import { SequelizeDate } from '../types/sequelize-date.type';
 
 @Table({
@@ -12,7 +12,7 @@ import { SequelizeDate } from '../types/sequelize-date.type';
         attributes: ['id', 'identity']
     },
 })
-export class BaseEntity<i> extends Model<BaseEntity<i>> {
+export class BaseEntity<i> extends BaseViewEntity<BaseEntity<i>> {
     @Unique
     @Default(Sequelize.UUIDV4)
     @Column({
@@ -38,14 +38,4 @@ export class BaseEntity<i> extends Model<BaseEntity<i>> {
         field: 'deleted_at'
     })
     deletedAt: SequelizeDate;
-
-    static findOne<M extends BaseEntity<any>>(options: FindOptions): Sequelize.Promise<M> {
-        return new Sequelize.Promise((resolve, reject) => {
-            this.findAll(options).then(results => {
-                resolve((results && results.length > 0 ? results[0] : undefined) as any);
-            }).catch(error => {
-                reject(error);
-            });
-        });
-    }
 }

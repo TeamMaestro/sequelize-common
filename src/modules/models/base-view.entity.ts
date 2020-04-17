@@ -1,6 +1,7 @@
 import * as Sequelize from 'sequelize';
-import { Model, Table } from 'sequelize-typescript';
+import { getAttributes, Model, Table } from 'sequelize-typescript';
 import { FindOptions } from 'sequelize/types';
+import { AttributesOf } from '../types/attributes-of.type';
 
 @Table({
     timestamps: false,
@@ -17,5 +18,64 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
                 reject(error);
             });
         });
+    }
+
+    /**
+     * Returns all of the columns defined for the model of the base repository
+     */
+    static getTableColumns(includeTableName = false): string[] {
+        // get all defined attributes for the model
+        const columnDefinitions = getAttributes(this);
+        // for each property use the field definition if exists, otherwise use the property name
+        const properties = Object.keys(columnDefinitions);
+        const columns: string[] = [];
+        properties.forEach(property => {
+            if (property) {
+                const columnDefinition = columnDefinitions[property];
+                if (columnDefinition.type === Sequelize.VIRTUAL) {
+                    return;
+                }
+                if (columnDefinition.field) {
+                    if (includeTableName) {
+                        return columns.push(`${this.getTableName()}.${columnDefinition.field}`);
+                    } else {
+                        return columns.push(columnDefinition.field);
+                    }
+                }
+            }
+            if (includeTableName) {
+                return columns.push(`${this.getTableName()}.${property}`);
+            } else {
+                return columns.push(property);
+            }
+        });
+        return columns;
+    }
+
+    static getColumnNames<M extends BaseViewEntity<any>>(this: { new(): M }, propertyNames: (keyof AttributesOf<M>)[], includeTableName = false): string[] {
+        return propertyNames.map(propertyName => this.prototype.getColumnName(propertyName, includeTableName));
+    }
+
+    static getColumnName<M extends BaseViewEntity<any>>(this: { new(): M }, propertyName: keyof AttributesOf<M>, includeTableName = false): string {
+        const columnDefinitions = getAttributes(this.prototype);
+        const columnDefinition = columnDefinitions[propertyName as string];
+        let columnName: string;
+        if (!columnDefinition) {
+            throw new Error(`${propertyName} is not defined for the entity ${this.prototype.name}`);
+        } else if (columnDefinition.type === Sequelize.VIRTUAL) {
+            throw new Error(`${propertyName} is a virtual property and therefore is not a column`);
+        } else if (columnDefinition.field) {
+            columnName = columnDefinition.field;
+        } else {
+            columnName = propertyName as string;
+        }
+        if (includeTableName) {
+            return `${this.prototype.getTableName()}.${columnName}`;
+        }
+        return columnName;
+    }
+
+    static attachTableNameToColumns(columnNames: string[]) {
+        return columnNames.map(columnName => `${this.getTableName()}.${columnName}`);
     }
 }

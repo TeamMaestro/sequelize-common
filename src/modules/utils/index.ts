@@ -1,3 +1,5 @@
+export * from './attach-table-name-to-column.util';
+export * from './attach-table-name-to-columns.util';
 export * from './default-update-association-comparison-function.util';
 export * from './default-update-many-to-many-fill-function.util';
 export * from './get-attributes.util';

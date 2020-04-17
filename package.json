@@ -41,6 +41,7 @@
         "typescript": "^3.6.2"
     },
     "dependencies": {
-        "deepmerge": "^4.2.2"
+        "deepmerge": "^4.2.2",
+        "is-plain-object": "^3.0.0"
     }
 }

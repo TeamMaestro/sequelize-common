@@ -1,12 +1,22 @@
 import { FindAndCountOptions, FindOptions, IncludeOptions, WhereOptions } from 'sequelize';
 import { Op } from 'sequelize';
 import deepMerge = require('deepmerge');
+import isPlainObject = require('is-plain-object');
 
 export type MergeableOptions =
     | FindOptions
     | FindAndCountOptions
     | WhereOptions
     | IncludeOptions;
+
+const isMergeableObject = (object: any) => {
+    if (Array.isArray(object)) {
+        return true;
+    }
+    else {
+        return (isPlainObject as any)(object);
+    }
+};
 
 const includeMerge = (
     baseIncludes: IncludeOptions[],
@@ -22,7 +32,7 @@ const includeMerge = (
                 requestIncludes[index] = deepMerge(
                     requestInclude,
                     baseInclude,
-                    { customMerge, arrayMerge: concatArray }
+                    { customMerge, arrayMerge: concatArray, isMergeableObject }
                 );
                 foundMatch = true;
             }
@@ -85,7 +95,8 @@ export const mergeOptions = (
     const transaction = getTransaction(baseOptions, requestOptions);
     const mergedOptions = deepMerge(baseOptions, requestOptions, {
         customMerge,
-        arrayMerge: concatArray
+        arrayMerge: concatArray,
+        isMergeableObject
     });
     attachTransaction(mergeOptions, transaction);
     return (mergedOptions as unknown) as FindOptions;

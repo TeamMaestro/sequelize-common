@@ -25,7 +25,7 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
      */
     static getTableColumns(includeTableName = false): string[] {
         // get all defined attributes for the model
-        const columnDefinitions = getAttributes(this);
+        const columnDefinitions = getAttributes(this.prototype);
         // for each property use the field definition if exists, otherwise use the property name
         const properties = Object.keys(columnDefinitions);
         const columns: string[] = [];
@@ -53,15 +53,16 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
     }
 
     static getColumnNames<M extends BaseViewEntity<any>>(this: { new(): M }, propertyNames: (keyof AttributesOf<M>)[], includeTableName = false): string[] {
-        return propertyNames.map(propertyName => this.prototype.getColumnName(propertyName, includeTableName));
+        return propertyNames.map(propertyName => (this as any).getColumnName(propertyName, includeTableName));
     }
 
     static getColumnName<M extends BaseViewEntity<any>>(this: { new(): M }, propertyName: keyof AttributesOf<M>, includeTableName = false): string {
-        const columnDefinitions = getAttributes(this.prototype);
+        const ctor = this as unknown as typeof BaseViewEntity;
+        const columnDefinitions = getAttributes(ctor.prototype);
         const columnDefinition = columnDefinitions[propertyName as string];
         let columnName: string;
         if (!columnDefinition) {
-            throw new Error(`${propertyName} is not defined for the entity ${this.prototype.name}`);
+            throw new Error(`${propertyName} is not defined for the entity ${ctor.name}`);
         } else if (columnDefinition.type === Sequelize.VIRTUAL) {
             throw new Error(`${propertyName} is a virtual property and therefore is not a column`);
         } else if (columnDefinition.field) {
@@ -70,12 +71,12 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
             columnName = propertyName as string;
         }
         if (includeTableName) {
-            return `${this.prototype.getTableName()}.${columnName}`;
+            return `${ctor.tableName}.${columnName}`;
         }
         return columnName;
     }
 
     static attachTableNameToColumns(columnNames: string[]) {
-        return columnNames.map(columnName => `${this.getTableName()}.${columnName}`);
+        return columnNames.map(columnName => `${this.tableName}.${columnName}`);
     }
 }

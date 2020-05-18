@@ -1,4 +1,4 @@
-import { fn } from 'sequelize';
+import * as moment from 'moment';
 import { AuthenticatedUser } from '../interfaces/authenticated-user.interface';
 import { UpdateOneToManyAssociationsOptions } from '../interfaces/update-one-to-many-associations-options.interface';
 import { CreatedByEntity } from '../models/created-by.entity';
@@ -71,7 +71,7 @@ export async function updateOneToManyAssociations<
     if (idsToDelete.length > 0 && !upsertOnly) {
         deletePromise = childTableModel.update({
             deletedById: user.id,
-            deletedAt: fn('now')
+            deletedAt: moment.utc().toISOString()
         }, {
             where: {
                 id: idsToDelete

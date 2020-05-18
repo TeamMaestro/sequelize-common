@@ -27,13 +27,16 @@
         "postpack": "rm *.d.ts && rm *.js && rm -Rf modules"
     },
     "peerDependencies": {
+        "moment": "^2.25.3",
         "sequelize": "^5.18.1",
         "sequelize-typescript": "^1.0.0",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
         "@types/bluebird": "^3.5.27",
+        "@types/moment": "^2.13.0",
         "@types/validator": "^10.11.3",
+        "moment": "^2.25.3",
         "reflect-metadata": "^0.1.13",
         "sequelize": "^5.18.1",
         "sequelize-typescript": "^1.0.0",

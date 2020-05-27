@@ -38,7 +38,7 @@ export async function updateOneToManyAssociations<
 
         // if they don't exist in the current relations, create new relation
         if (relationObjectIndex < 0) {
-            const filledRecord = fillFunction(newChildren[i], i, undefined, options);
+            const filledRecord = await fillFunction(newChildren[i], i, undefined, options);
             filledRecord.createdById = user.id;
             filledRecord.updatedById = user.id;
             recordsToCreate.push(filledRecord);
@@ -49,7 +49,7 @@ export async function updateOneToManyAssociations<
             currentChildren.splice(relationObjectIndex, 1);
             relationIdsToDelete.delete(relatedObject.id);
 
-            const filledRecord = fillFunction(newChildren[i], i, relatedObject, options);
+            const filledRecord = await fillFunction(newChildren[i], i, relatedObject, options);
             filledRecord.updatedById = user.id;
             // update sort order if necessary
             updatePromises.push(

@@ -10,4 +10,4 @@ export type UpdateAssociationFillFunction<
     NewChildrenType = any>
     = (newChild: NewChildrenType, index: number, existingRecord: T, updateOptions:
         UpdateManyToManyAssociationsOptions<T, AuthenticatedUserType, NewChildrenType> |
-        UpdateOneToManyAssociationsOptions<T, AuthenticatedUserType, NewChildrenType>) => AttributesOf<T>;
+        UpdateOneToManyAssociationsOptions<T, AuthenticatedUserType, NewChildrenType>) => AttributesOf<T> | Promise<AttributesOf<T>>;

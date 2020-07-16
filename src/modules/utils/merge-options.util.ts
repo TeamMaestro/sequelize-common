@@ -98,6 +98,6 @@ export const mergeOptions = (
         arrayMerge: concatArray,
         isMergeableObject
     });
-    attachTransaction(mergeOptions, transaction);
+    attachTransaction(mergedOptions, transaction);
     return (mergedOptions as unknown) as FindOptions;
 };

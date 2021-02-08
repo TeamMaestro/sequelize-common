@@ -1,4 +1,5 @@
 import { ModelCtor } from 'sequelize-typescript';
+import { FindOptions } from 'sequelize/types';
 import { AuthenticatedUser } from './authenticated-user.interface';
 import { UpdateOneToManyAssociationsOptions } from './update-one-to-many-associations-options.interface';
 import { CreatedByEntity } from '../models/created-by.entity';
@@ -31,4 +32,11 @@ export interface UpdateManyToManyAssociationsOptions<
      * if default scope does not include enough information.
      */
     joinTableFindAttributes: (keyof AttributesOf<T>)[];
+    /**
+     * If provided, these find options will be merged into the query to find all
+     * children in the join table. The default find options these are merged into
+     * request the joinTableFindAttributes and have a where clause that finds the
+     * child rows based on the parentInstanceId/parentForeignKey.
+     */
+    additionalJoinTableFindOptions?: FindOptions;
 }

@@ -23,8 +23,8 @@
         "watch": "tsc -w",
         "start": "tsc",
         "postpublish": "git push && git push --tags",
-        "prepack": "tsc"
-        
+        "prepack": "tsc",
+        "postpack": "rm *.d.ts && rm *.js && rm -Rf modules"
     },
     "peerDependencies": {
         "@teamhive/nestjs-common": "^14.1.1",

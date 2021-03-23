@@ -27,17 +27,31 @@
         "postpack": "rm *.d.ts && rm *.js && rm -Rf modules"
     },
     "peerDependencies": {
+        "@teamhive/nestjs-common": "^14.1.1",
         "moment": "^2.25.3",
         "sequelize": "^5.18.1",
         "sequelize-typescript": "^1.0.0",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
+        "@nestjs/common": "^7.6.15",
+        "@nestjs/core": "^7.6.15",
+        "@nestjs/microservices": "^7.6.15",
+        "@nestjs/passport": "^7.1.5",
+        "@nestjs/testing": "^7.6.15",
+        "@teamhive/nestjs-swagger": "^4.6.0",
+        "@teamhive/nestjs-common": "^14.1.1",
+        "@teamhive/node-common": "^3.0.0-alpha.6",
         "@types/bluebird": "^3.5.27",
         "@types/moment": "^2.13.0",
         "@types/validator": "^10.11.3",
+        "class-validator": "^0.13.1",
+        "config": "^3.3.6",
+        "log4js": "^6.3.0",
         "moment": "^2.25.3",
+        "passport": "^0.4.1",
         "reflect-metadata": "^0.1.13",
+        "rxjs": "^6.6.6",
         "sequelize": "^5.18.1",
         "sequelize-typescript": "^1.0.0",
         "tslint": "^5.19.0",
@@ -46,5 +60,10 @@
     "dependencies": {
         "deepmerge": "^4.2.2",
         "is-plain-object": "^3.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@teamhive/nestjs-common": {
+            "optional": true
+        }
     }
 }

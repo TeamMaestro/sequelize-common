@@ -51,6 +51,11 @@ export async function updateOneToManyAssociations<
 
             const filledRecord = await fillFunction(newChildren[i], i, relatedObject, options);
             filledRecord.updatedById = user.id;
+
+            // if the record is being updated, ensure it is not deleted
+            filledRecord.deletedAt = null;
+            filledRecord.deletedById = null;
+            
             // update sort order if necessary
             updatePromises.push(
                 relatedObject.update(filledRecord, { transaction }) as unknown as Promise<T>

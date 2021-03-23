@@ -82,7 +82,8 @@ const getTransaction = (baseOptions: any, requestOptions: any) => {
 const attachTransaction = (mergedOptions: any, transaction: any) => {
     mergedOptions.transaction = transaction;
 };
-export const mergeOptions = (
+
+const _mergeOptions = (
     baseOptions: any = {},
     requestOptions: any = {}
 ): FindOptions => {
@@ -100,4 +101,20 @@ export const mergeOptions = (
     });
     attachTransaction(mergedOptions, transaction);
     return (mergedOptions as unknown) as FindOptions;
+};
+
+export const mergeOptions = (
+    ...options: any[]
+): FindOptions => {
+    if (options.length === 0) {
+        return {};
+    }
+    else {
+        let findOptions = options[0];
+        // merge all of the options together one by one
+        for(let i = 1; i < options.length; i++) {
+            findOptions = _mergeOptions(findOptions, options[i]);
+        }
+        return findOptions;
+    }
 };

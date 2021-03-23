@@ -11,13 +11,13 @@ import { AttributesOf } from '../types/attributes-of.type';
 export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
 
     static findOne<M extends BaseViewEntity<any>>(options: FindOptions): Sequelize.Promise<M> {
-        return new Sequelize.Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.findAll(options).then(results => {
                 resolve((results && results.length > 0 ? results[0] : undefined) as any);
             }).catch(error => {
                 reject(error);
             });
-        });
+        }) as unknown as Sequelize.Promise<M>;
     }
 
     /**

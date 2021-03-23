@@ -11,7 +11,11 @@
         "declaration": true,
         "moduleResolution": "node",
         "noUnusedLocals": true,
-        "removeComments": false
+        "removeComments": false,
+        "typeRoots": ["node_modules/@types"],
+        "types": ["node"],
+        "esModuleInterop": true,
+        "skipLibCheck": true
     },
     "exclude": [
         "node_modules",

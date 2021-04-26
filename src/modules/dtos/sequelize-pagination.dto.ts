@@ -5,7 +5,8 @@ export class SequelizePaginationDto extends Pagination {
     getFindOptions() {
         const paginationFindOptions: FindOptions = {
             limit: this.size,
-            offset: this.offset
+            offset: this.offset,
+            order: this.getOrderBy()
         };
         return paginationFindOptions;
     }

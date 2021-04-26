@@ -6,7 +6,8 @@ export class SequelizePaginationSearchDto extends PaginationSearch {
         const paginationFindOptions: FindOptions = {
             include: this.search ? [this.search] : [],
             limit: this.size,
-            offset: this.offset
+            offset: this.offset,
+            order: this.getOrderBy()
         };
         return paginationFindOptions;
     }

@@ -1,10 +1,10 @@
 import { FindAndCountAllResponse } from '../interfaces/find-and-count-all-response.interface';
 
-export function fetchAllResponse<T, AdditionalParams = any>(
+export function fetchAllResponse<T, ResponseClass = any, AdditionalParams = any>(
     response: FindAndCountAllResponse<T>,
-    responseClass: new (content: T, additionalParams?: AdditionalParams) => any,
+    responseClass: new (content: T, additionalParams?: AdditionalParams) => ResponseClass,
     additionalParamFunction?: (content: T) => AdditionalParams
-): FetchAllResponse<T> {
+): FetchAllResponse<ResponseClass> {
     const content = [];
     if (response.rows && response.rows.length > 0) {
         content.push(

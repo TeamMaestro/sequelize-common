@@ -4,7 +4,7 @@ export function fetchAllResponse<T, AdditionalParams = any>(
     response: FindAndCountAllResponse<T>,
     responseClass: new (content: T, additionalParams?: AdditionalParams) => any,
     additionalParamFunction?: (content: T) => AdditionalParams
-) {
+): FetchAllResponse<T> {
     const content = [];
     if (response.rows && response.rows.length > 0) {
         content.push(
@@ -20,4 +20,9 @@ export function fetchAllResponse<T, AdditionalParams = any>(
         content,
         totalElements: response.count
     };
+}
+
+export interface FetchAllResponse<T> {
+    content: T[];
+    totalElements: number;
 }

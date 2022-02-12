@@ -1,21 +1,18 @@
 {
-    "name": "@teamhive/sequelize-common",
+    "name": "@teammaestro/sequelize-common",
     "version": "10.0.4",
     "description": "A common set of models and functions that we use throughout most of our Sequelize projects",
     "keywords": [
         "Typescript"
     ],
-    "author": "TeamHive",
-    "contributors": [
-        "John Pinkster <jpinkster>"
-    ],
-    "homepage": "https://github.com/TeamHive/sequelize-common",
+    "author": "TeamMaestro",
+    "homepage": "https://github.com/TeamMaestro/sequelize-common",
     "repository": {
         "type": "git",
-        "url": "https://github.com/TeamHive/sequelize-common.git"
+        "url": "https://github.com/TeamMaestro/sequelize-common.git"
     },
     "bugs": {
-        "url": "https://github.com/TeamHive/sequelize-common/issues"
+        "url": "https://github.com/TeamMaestro/sequelize-common/issues"
     },
     "license": "ISC",
     "scripts": {
@@ -27,21 +24,21 @@
         "postpack": "rm *.d.ts && rm *.js && rm -Rf modules"
     },
     "peerDependencies": {
-        "@teamhive/nestjs-common": "^14.1.1",
+        "@teammaestro/nestjs-common": "^19.0",
         "moment": "^2.25.3",
         "sequelize": "^5.18.1",
         "sequelize-typescript": "^1.0.0",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
-        "@nestjs/common": "^7.6.15",
-        "@nestjs/core": "^7.6.15",
-        "@nestjs/microservices": "^7.6.15",
-        "@nestjs/passport": "^7.1.5",
-        "@nestjs/testing": "^7.6.15",
-        "@teamhive/nestjs-swagger": "^4.6.0",
-        "@teamhive/nestjs-common": "^14.1.1",
-        "@teamhive/node-common": "^3.0.0-alpha.6",
+        "@nestjs/common": "^8.0",
+        "@nestjs/core": "^8.0",
+        "@nestjs/microservices": "^8.0",
+        "@nestjs/passport": "^8.0",
+        "@nestjs/testing": "^8.0",
+        "@nestjs/swagger": "^5.2.0",
+        "@teammaestro/nestjs-common": "^19.0.0",
+        "@teammaestro/node-common": "^4.0.0",
         "@types/bluebird": "^3.5.27",
         "@types/moment": "^2.13.0",
         "@types/validator": "^10.11.3",
@@ -62,7 +59,7 @@
         "is-plain-object": "^3.0.0"
     },
     "peerDependenciesMeta": {
-        "@teamhive/nestjs-common": {
+        "@teammaestro/nestjs-common": {
             "optional": true
         }
     }

@@ -1,4 +1,4 @@
-import { Pagination } from '@teamhive/nestjs-common';
+import { Pagination } from '@teammaestro/nestjs-common';
 import { FindOptions } from 'sequelize/types';
 
 export class SequelizePaginationDto extends Pagination {

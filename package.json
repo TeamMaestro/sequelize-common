@@ -24,7 +24,7 @@
         "postpack": "rm *.d.ts && rm *.js && rm -Rf modules"
     },
     "peerDependencies": {
-        "@teammaestro/nestjs-common": "^19.0",
+        "@teammaestro/nestjs-common": "^20.0",
         "moment": "^2.25.3",
         "sequelize": "^5.18.1",
         "sequelize-typescript": "^1.0.0",
@@ -37,7 +37,7 @@
         "@nestjs/passport": "^8.0",
         "@nestjs/testing": "^8.0",
         "@nestjs/swagger": "^5.2.0",
-        "@teammaestro/nestjs-common": "^19.0.0",
+        "@teammaestro/nestjs-common": "^20.0.0",
         "@teammaestro/node-common": "^4.0.0",
         "@types/bluebird": "^3.5.27",
         "@types/moment": "^2.13.0",

@@ -1,3 +1,3 @@
-export * from './sequelize-filter.dto';
-export * from './sequelize-pagination-search.dto';
-export * from './sequelize-pagination.dto';
+export * from './sequelize.filter';
+export * from './sequelize.pagination-search';
+export * from './sequelize.pagination';

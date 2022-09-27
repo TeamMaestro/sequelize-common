@@ -46,7 +46,7 @@
         "config": "^3.3.6",
         "log4js": "^6.3.0",
         "moment": "^2.25.3",
-        "passport": "^0.4.1",
+        "passport": "^0.6.0",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^6.6.6",
         "sequelize": "^5.18.1",

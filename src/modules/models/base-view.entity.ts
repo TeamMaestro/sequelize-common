@@ -9,14 +9,15 @@ import { AttributesOf } from '../types/attributes-of.type';
     freezeTableName: true
 })
 export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
-
     static findOne<M extends BaseViewEntity<any>>(options: FindOptions): Sequelize.Promise<M> {
         return new Promise((resolve, reject) => {
-            this.findAll(options).then(results => {
-                resolve((results && results.length > 0 ? results[0] : undefined) as any);
-            }).catch(error => {
-                reject(error);
-            });
+            this.findAll(options)
+                .then((results) => {
+                    resolve((results && results.length > 0 ? results[0] : undefined) as any);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
         }) as unknown as Sequelize.Promise<M>;
     }
 
@@ -29,7 +30,7 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
         // for each property use the field definition if exists, otherwise use the property name
         const properties = Object.keys(columnDefinitions);
         const columns: string[] = [];
-        properties.forEach(property => {
+        properties.forEach((property) => {
             if (property) {
                 const columnDefinition = columnDefinitions[property];
                 if (columnDefinition.type === Sequelize.VIRTUAL) {
@@ -52,11 +53,19 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
         return columns;
     }
 
-    static getColumnNames<M extends BaseViewEntity<any>>(this: { new(): M }, propertyNames: (keyof AttributesOf<M>)[], includeTableName = false): string[] {
-        return propertyNames.map(propertyName => (this as any).getColumnName(propertyName, includeTableName));
+    static getColumnNames<M extends BaseViewEntity<any>>(
+        this: { new (): M },
+        propertyNames: (keyof AttributesOf<M>)[],
+        includeTableName = false
+    ): string[] {
+        return propertyNames.map((propertyName) => (this as any).getColumnName(propertyName, includeTableName));
     }
 
-    static getColumnName<M extends BaseViewEntity<any>>(this: { new(): M }, propertyName: keyof AttributesOf<M>, includeTableName = false): string {
+    static getColumnName<M extends BaseViewEntity<any>>(
+        this: { new (): M },
+        propertyName: keyof AttributesOf<M>,
+        includeTableName = false
+    ): string {
         const ctor = this as unknown as typeof BaseViewEntity;
         const columnDefinitions = getAttributes(ctor.prototype);
         const columnDefinition = columnDefinitions[propertyName as string];
@@ -77,6 +86,32 @@ export class BaseViewEntity<i> extends Model<BaseViewEntity<i>> {
     }
 
     static attachTableNameToColumns(columnNames: string[]) {
-        return columnNames.map(columnName => `${this.tableName}.${columnName}`);
+        return columnNames.map((columnName) => `${this.tableName}.${columnName}`);
+    }
+
+    static getQueryAlias<M extends BaseViewEntity<any>>(
+        this: {
+            new (): M;
+            tableName: string;
+            getColumnName: (propertyName: keyof AttributesOf<M>) => string;
+        },
+        alias?: string
+    ): ((propertyName: keyof AttributesOf<M>, removeAlias?: boolean) => string) & {
+        tableNameAndAlias: string;
+        tableName: string;
+    } {
+        const fn: ((propertyName: keyof AttributesOf<M>, removeAlias?: boolean) => string) & {
+            tableNameAndAlias: string;
+            tableName: string;
+        } = (propertyName: keyof AttributesOf<M>, removeAlias?: boolean) =>
+            !alias || removeAlias
+                ? `${this.getColumnName(propertyName)}`
+                : `${alias}.${this.getColumnName(propertyName)}`;
+        if (alias) {
+            fn.tableNameAndAlias = `${this.tableName} ${alias}`;
+        }
+        fn.tableName = `${this.tableName}`;
+
+        return fn;
     }
 }
